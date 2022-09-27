@@ -1,8 +1,14 @@
 package hellojpa;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
+
+import static javax.persistence.CascadeType.*;
 
 /**
  * packageName : hellojpa
@@ -17,19 +23,29 @@ import javax.persistence.Table;
  */
 
 @Entity //JPA가 관리하는 애구나 하는 어노테이션
-@Table
 public class Member {
-    @Id
+
+    @Id     //PK 매핑
+    @GeneratedValue
+    @Column(name = "MEMBER_ID")
     private Long id;
-    private String name;
 
-    public Member() {
-    }
+    @Column(name = "USERNAME")//name은 DB 컬럼명이 name
+    private String username;
 
-    public Member(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    @Embedded
+    private Address homeAddress;
+
+    @ElementCollection
+    @CollectionTable(name = "FAVORITE_FOOD", joinColumns =
+        @JoinColumn(name = "MEMBER_ID")
+    )
+    @Column(name = "FOOD_NAME")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    @OneToMany(cascade = ALL, orphanRemoval = true)
+    @JoinColumn(name = "MEMBER_ID")
+    private List<AddressEntity> addresseHistory = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -39,11 +55,35 @@ public class Member {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Address getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<AddressEntity> getAddresseHistory() {
+        return addresseHistory;
+    }
+
+    public void setAddresseHistory(List<AddressEntity> addresseHistory) {
+        this.addresseHistory = addresseHistory;
     }
 }

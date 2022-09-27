@@ -1,25 +1,30 @@
-package hellojpa;
+package jpabook.jpashop;
+
+import com.sun.org.apache.xpath.internal.operations.Or;
+import jpabook.jpashop.domain.Book;
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderItem;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.util.List;
-import java.util.Set;
 
 /**
- * packageName : hellojpa
+ * packageName : jpabook.jpashop
  * fileName : JpaMain
  * author : SHW
- * date : 2022-09-04
+ * date : 2022-09-13
  * description :
  * ===========================================================
  * DATE      AUTHOR      NOTE
  * -----------------------------------------------------------
- * 2022-09-04   SHW     최초 생성
+ * 2022-09-13   SHW     최초 생성
  */
 
 public class JpaMain {
+
     public static void main(String[] args) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("hello");
 
@@ -29,15 +34,11 @@ public class JpaMain {
         tx.begin();
 
         try{
+            Book book = new Book();
+            book.setName("JPA");
+            book.setAuthor("김영한");
 
-            List<Member> result = em.createQuery(
-                    "select m from Member m where m.username like '%kim%'",
-                    Member.class
-            ).getResultList();
-
-            for (Member member : result) {
-                System.out.println("member = " + member);
-            }
+            em.persist(book);
 
             tx.commit();
         }catch (Exception e){
@@ -49,5 +50,4 @@ public class JpaMain {
         emf.close();
 
     }
-
 }
